@@ -1,78 +1,56 @@
-//get computer choice at random
+const possibleChoices = ['rock', 'paper', 'scissors']
+const player_win = 'Ez W'
+const pc_win = 'L + ratio'
+const tie = 'tie'
 
-let computerSelection = 0;
 function getCompChoice() {
-    let compValues = ["rock","paper","scissors"]
-    let valueToUse = compValues[Math.floor(Math.random() * compValues.length)];
-    return valueToUse;
+    return possibleChoices[Math.floor(Math.random() * possibleChoices.length)];
 }
-//assign it to variable
-
-computerSelection = getCompChoice();
-
-//ask for player choice
-let playerSelection = 0;
 function getPlayerChoice() {
-    const playerChoice = prompt('Make your choice.', '').toLowerCase();
-    const possibleChoices = ['rock', 'paper', 'scissors']
-    if (possibleChoices.includes(playerChoice)) {
-        return playerChoice;
-    } else {
-        return 'Not a valid choice';
+    let playerChoice = prompt('Make your choice.', '').toLowerCase();
+    while (!possibleChoices.includes(playerChoice)) {
+        playerChoice = prompt('Wrong input try again.', '').toLowerCase()
     }
+    return playerChoice
 }
-//assign it to variable
-playerSelection = getPlayerChoice();
-//compare choices and declare winner
-let winner;
-
 function playRound(playerSelection, computerSelection) {
-    if (playerSelection === computerSelection) {
-        return 'Tie';
-    }
-    if (playerSelection === 'rock') {
-        if (computerSelection === 'paper') {
-            return 'W for comp';
-        } else {
-            return 'W for ya';
-        }
-    }
-    if (playerSelection === 'paper') {
-        if (computerSelection === 'scissors') {
-            return 'W for comp';
-        } else {
-            return 'W for ya';
-        }
-    }
-    if (playerSelection === 'scissors') {
-        if (computerSelection === 'rock') {
-            return 'W for comp';
-        } else {
-            return 'W for ya';
-        }
+    switch (playerSelection) {
+        case computerSelection:
+            return tie
+        case 'rock':
+            return computerSelection === 'paper' ? player_win : pc_win
+        case 'paper':
+            return computerSelection === 'scissors' ? player_win : pc_win
+        case 'scissors':
+            return computerSelection === 'rock' ? player_win : pc_win
     }
 }
 
-winner = playRound(playerSelection, computerSelection);
-//reapeat for 5 rounds and update scores
-let playerScore = 0;
-let computerScore = 0;
-let round = 1;
 
 function game() {
-    for (i = 1; i <= 5; i++) {
-        playRound(playerSelection, computerSelection);
-
-        if (winner === 'Tie') {
-            console.log(winner, round++);
+    let playerScore = 0;
+    let computerScore = 0;
+    for (let round = 0; round < 5; round++) {
+        function gameLog() {
+            console.log(winner, `Your score: ${playerScore}`, `PC score: ${computerScore}`, `Round: ${round + 1}`);
         }
-        if(winner === 'W for ya') {
-            console.log(winner, playerScore++, round++);
-        } 
-        if (winner === 'W for comp') {
-            console.log(winner, computerScore++, round++);
-        } 
+        const winner = playRound(getPlayerChoice(), getCompChoice());
+        switch (winner) {
+            case tie:
+                gameLog();
+                break
+            case player_win:
+                ++playerScore
+                gameLog();
+                break
+            case pc_win:
+                ++computerScore
+                gameLog();
+                break
+            default:
+                throw Error('something went wrong, your mom gay')
+        }
     }
+    return playerScore > computerScore ? player_win : pc_win;
 }
-
 console.log(game());
