@@ -1,56 +1,71 @@
-const possibleChoices = ['rock', 'paper', 'scissors']
-const player_win = 'Ez W'
-const pc_win = 'L + ratio'
-const tie = 'tie'
+const possibleChoices = ['rock', 'paper', 'scissors'];
+const playerSelection = '';
+const computerSelection = getCompChoice();
+let playerScore = 0;
+let pcScore = 0;
+const scores = document.querySelector('#scores');
+const _winner = document.createElement('div');
+scores.appendChild(_winner);
+const _yourScore = document.createElement('div');
+scores.appendChild(_yourScore);
+const _compScore = document.createElement('div');
+scores.appendChild(_compScore);
+const _tie = document.createElement('div');
+scores.appendChild(_tie);
+
+const rockBtn = document.querySelector('#rock');
+rockBtn.addEventListener('click', () => {
+    playRound('rock', getCompChoice())
+});
+
+const paperBtn = document.querySelector('#paper');
+paperBtn.addEventListener('click', () => {
+    playRound('paper', getCompChoice());
+});
+
+const scissorsBtn = document.querySelector('#scissors');
+scissorsBtn.addEventListener('click', () => {
+    playRound('scissors', getCompChoice())
+});
 
 function getCompChoice() {
     return possibleChoices[Math.floor(Math.random() * possibleChoices.length)];
 }
-function getPlayerChoice() {
-    let playerChoice = prompt('Make your choice.', '').toLowerCase();
-    while (!possibleChoices.includes(playerChoice)) {
-        playerChoice = prompt('Wrong input try again.', '').toLowerCase()
-    }
-    return playerChoice
-}
+
 function playRound(playerSelection, computerSelection) {
-    switch (playerSelection) {
-        case computerSelection:
-            return tie
+    switch(playerSelection) {
+        case(computerSelection): 
+        _tie.textContent = 'Tie';
         case 'rock':
-            return computerSelection === 'paper' ? player_win : pc_win
+        computerSelection === 'scissors' ? win() : lose();
+        break;
         case 'paper':
-            return computerSelection === 'scissors' ? player_win : pc_win
+        computerSelection === 'rock' ? win() : lose();
+        break;
         case 'scissors':
-            return computerSelection === 'rock' ? player_win : pc_win
+        computerSelection === 'paper' ? win() : lose();
+        break;
     }
 }
 
-
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let round = 0; round < 5; round++) {
-        function gameLog() {
-            console.log(winner, `Your score: ${playerScore}`, `PC score: ${computerScore}`, `Round: ${round + 1}`);
-        }
-        const winner = playRound(getPlayerChoice(), getCompChoice());
-        switch (winner) {
-            case tie:
-                gameLog();
-                break
-            case player_win:
-                ++playerScore
-                gameLog();
-                break
-            case pc_win:
-                ++computerScore
-                gameLog();
-                break
-            default:
-                throw Error('something went wrong, your mom gay')
-        }
-    }
-    return playerScore > computerScore ? player_win : pc_win;
+function win() {
+   if (playerScore < 5) {
+    playerScore++;
+    _yourScore.textContent = `Nice! Your score ${playerScore}, PC Score ${pcScore}!`;
+   } else if (playerScore === 5) {
+    _winner.textContent = `Ez W with a score of ${playerScore}!`;
+   }
 }
-console.log(game());
+
+function lose() {
+    if (pcScore < 5) {
+    pcScore++;
+    _compScore.textContent = `Shame. Your score ${playerScore}, PC Score ${pcScore}.`;
+    } else if (pcScore === 5) {
+    _winner.textContent = `You suck with a score of ${pcScore}!`;
+    }
+}
+
+ 
+
+    
